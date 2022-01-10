@@ -12,9 +12,8 @@ server.get('/hello_world', (req, res) => {
 
 server.post('/api/users', async (req, res) => {
     try{
-        const { name, bio } = req.body
-        console.log(name,bio)
-        const newUser = await User.insert({ name, bio })
+        const newUser = await User.insert(req.body)
+        console.log(newUser)
         res.status(201).json(newUser)
     }
     catch (err){
