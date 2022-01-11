@@ -20,7 +20,7 @@ server.post('/api/users', async (req, res) => {
         } 
     }
     catch (err){
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ message: "There was an error while saving the user to the database" })
     }
 })
 
@@ -30,7 +30,7 @@ server.get('/api/users', async (req, res) => {
         res.json(users)
     }
     catch (err){
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ message: "The users information could not be retrieved" })
     }
 })
 
@@ -38,13 +38,13 @@ server.get('/api/users/:id', async (req, res) => {
     try{
         const user = await User.findById(req.params.id)
         if(!user) {
-            res.status(404).json("Please enter the correct user id.")
+            res.status(404).json("The user with the specified ID does not exist")
         } else {
             res.status(200).json(user)
         }  
     }
     catch (err){
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ message: "The user information could not be retrieved" })
     }
 })
 
@@ -53,13 +53,13 @@ server.delete('/api/users/:id', async (req, res) => {
         const { id } = req.params
         const deletedUser = await User.remove(id)
         if(!deletedUser){
-            res.status(404).json({ message: 'There is no user by that id!'})
+            res.status(404).json({ message: "The user with the specified ID does not exist" })
         } else{
             res.json(deletedUser)
         }
     }
     catch (err){
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ message: "The user could not be removed" })
     }
 })
 
@@ -69,13 +69,15 @@ server.put('/api/users/:id', async (req, res) => {
     try{
         const updatedUser = await User.update(id, { name, bio })
         if (!updatedUser) {
-            res.status(404).json({ message: 'There is no user by that id!'})
+            res.status(404).json({ message: "The user with the specified ID does not exist" })
+        } else if (!req.body.name || !req.body.bio) {
+            res.status(400).json({ message: "Please provide name and bio for the user" })
         } else {
             res.json(updatedUser)
         }
     }
     catch{
-        res.status(500).json({ message: err.message })
+        res.status(500).json({ message: "The user information could not be modified" })
     }
 })
 
