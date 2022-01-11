@@ -60,5 +60,21 @@ server.delete('/api/users/:id', async (req, res) => {
     }
 })
 
+server.put('/api/users/:id', async (req, res) => {
+    const { id } = req.params
+    const { name, bio } = req.body
+    try{
+        const updatedUser = await User.update(id, { name, bio })
+        if (!updatedUser) {
+            res.status(404).json({ message: 'There is no user by that id!'})
+        } else {
+            res.json(updatedUser)
+        }
+    }
+    catch{
+        res.status(500).json({ message: err.message })
+    }
+})
+
 
 module.exports = server; 
