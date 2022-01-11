@@ -13,8 +13,11 @@ server.get('/hello_world', (req, res) => {
 server.post('/api/users', async (req, res) => {
     try{
         const newUser = await User.insert(req.body)
-        console.log(newUser)
-        res.status(201).json(newUser)
+        if (!req.body.name || !req.body.bio){
+            res.status(400).json({ message: "Please provide name and bio for the user" })
+        } else {
+            res.status(201).json(newUser)
+        } 
     }
     catch (err){
         res.status(500).json({ message: err.message })
